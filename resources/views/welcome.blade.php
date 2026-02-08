@@ -1,7 +1,49 @@
 <x-app-layout>
-	<section class="relative overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80'); background-size: cover; background-position: center;">
+	<section class="relative overflow-hidden min-h-[60vh] lg:min-h-[68vh]" x-data="{
+        index: 0,
+        timer: null,
+		slides: [
+			{ image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=2000&q=80', label: 'Above the clouds' },
+			{ image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=2000&q=80', label: 'Runway departure' },
+			{ image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=2000&q=80', label: 'Cabin experience' },
+			{ image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80', label: 'Golden hour flight' },
+		],
+        next() { this.index = (this.index + 1) % this.slides.length; },
+        prev() { this.index = (this.index - 1 + this.slides.length) % this.slides.length; },
+        go(i) { this.index = i; }
+    }"
+    x-init="timer = setInterval(() => next(), 6000)"
+    @mouseenter="clearInterval(timer)"
+    @mouseleave="timer = setInterval(() => next(), 6000)"
+    >
+		<style>
+            [x-cloak] { display: none !important; }
+        </style>
+		<div class="absolute inset-0" aria-hidden="true">
+			<template x-for="(slide, i) in slides" :key="slide.image">
+				<div class="absolute inset-0"
+					 x-cloak
+					 x-show="index === i"
+					 x-transition.opacity.duration.900ms
+					 :style="`background-image: url('${slide.image}')`"
+					 style="background-size: 100% 100%; background-position: center; background-repeat: no-repeat;">
+				</div>
+			</template>
+		</div>
 		<div class="absolute inset-0 bg-base/80 mix-blend-multiply"></div>
-		<div class="relative mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:px-8">
+
+		<button type="button" @click="prev()" class="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 text-white backdrop-blur transition hover:bg-white/20" aria-label="Previous slide">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+        </button>
+		<button type="button" @click="next()" class="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 text-white backdrop-blur transition hover:bg-white/20" aria-label="Next slide">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6" />
+            </svg>
+        </button>
+
+		<div class="relative mx-auto max-w-7xl px-4 pb-28 pt-24 sm:px-6 lg:px-8">
 			<div class="max-w-3xl space-y-6">
 				<p class="text-sm uppercase tracking-[0.3em] text-slate-200">Elevate every journey</p>
 				<h1 class="text-4xl font-semibold leading-tight text-white sm:text-5xl">Where to Next?</h1>
